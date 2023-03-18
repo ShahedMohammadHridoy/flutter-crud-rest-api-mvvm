@@ -10,8 +10,9 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: HomePage(),
       title: 'CRUD with REST API (MVVM)',
-    )
+    );
   }
 
 }
