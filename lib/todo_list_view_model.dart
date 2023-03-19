@@ -43,15 +43,25 @@ class TodoListViewModel {
     }
   }
 
-  void updateData(Todo todo, String title, bool completed) {
+  Future<void> updateData(Todo todo, String title, bool completed) async {
     final index = _todoList.indexOf(todo);
     final updatedTodo = Todo(
       id: todo.id,
       title: title,
       completed: completed,
     );
-    _todoList[index] = updatedTodo;
-    _todoListController.add(_todoList);
+    final response = await http.put(Uri.parse('$baseUrl${todo.id}/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(updatedTodo.toJson()));
+
+    if (response.statusCode == 200) {
+      _todoList[index] = updatedTodo;
+      _todoListController.add(_todoList);
+    } else {
+      throw Exception('Failed to update todo');
+    }
   }
 
   void deleteData(Todo todo) {
