@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_rest_api_crud_mvvm/urls.dart';
 import 'package:http/http.dart' as http;
 import 'todo.dart';
 
@@ -11,8 +12,7 @@ class TodoListViewModel {
   Stream<List<Todo>> get todoListStream => _todoListController.stream;
 
   Future<void> fetchData() async {
-    final response =
-        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/todos'));
+    final response = await http.get(Uri.parse(baseUrl));
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -23,14 +23,24 @@ class TodoListViewModel {
     }
   }
 
-  void addData(String title, bool completed) {
+  Future<void> addData(String title, bool completed) async {
     final newTodo = Todo(
       id: _todoList.length + 1,
       title: title,
       completed: completed,
     );
-    _todoList.add(newTodo);
-    _todoListController.add(_todoList);
+    final response = await http.post(Uri.parse(baseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(newTodo.toJson()));
+
+    if (response.statusCode == 201) {
+      _todoList.add(newTodo);
+      _todoListController.add(_todoList);
+    } else {
+      throw Exception('Failed to add todo');
+    }
   }
 
   void updateData(Todo todo, String title, bool completed) {
