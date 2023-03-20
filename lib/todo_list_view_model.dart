@@ -64,9 +64,17 @@ class TodoListViewModel {
     }
   }
 
-  void deleteData(Todo todo) {
-    _todoList.remove(todo);
-    _todoListController.add(_todoList);
+  Future<void> deleteData(Todo todo) async {
+    final response = await http.delete(Uri.parse('$baseUrl${todo.id}/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        });
+    if (response.statusCode == 204) {
+      _todoList.remove(todo);
+      _todoListController.add(_todoList);
+    } else {
+      throw Exception('Failed to delete todo');
+    }
   }
 
   void dispose() {
