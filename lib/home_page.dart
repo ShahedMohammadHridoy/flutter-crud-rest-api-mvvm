@@ -9,6 +9,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _viewModel = TodoListViewModel();
+  late bool completed;
 
   @override
   void initState() {
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CRUD with REST API (MVVM)'),
+        title: const Text('CRUD with REST API (MVVM)'),
       ),
       body: StreamBuilder<List<Todo>>(
         stream: _viewModel.todoListStream,
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           List<Todo> todoList = snapshot.data!;
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text(todo.title),
                 subtitle: Text(todo.completed ? 'Completed' : 'Not completed'),
                 trailing: IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     _viewModel.deleteData(todo);
                   },
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                       bool completed = todo.completed;
 
                       return AlertDialog(
-                        title: Text('Update item'),
+                        title: const Text('Update item'),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                               onChanged: (value) {
                                 title = value;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Title',
                               ),
                               controller:
@@ -74,19 +75,19 @@ class _HomePageState extends State<HomePage> {
                               onChanged: (value) {
                                 completed = value!;
                               },
-                              title: Text('Completed'),
+                              title: const Text('Completed'),
                             ),
                           ],
                         ),
                         actions: [
                           TextButton(
-                            child: Text('Cancel'),
+                            child: const Text('Cancel'),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
                           TextButton(
-                            child: Text('Save'),
+                            child: const Text('Save'),
                             onPressed: () {
                               _viewModel.updateData(todo, title, completed);
                               Navigator.pop(context);
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           showDialog(
             context: context,
@@ -112,7 +113,7 @@ class _HomePageState extends State<HomePage> {
               bool completed = false;
 
               return AlertDialog(
-                title: Text('Add item'),
+                title: const Text('Add item'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                       onChanged: (value) {
                         title = value;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Title',
                       ),
                     ),
@@ -129,19 +130,19 @@ class _HomePageState extends State<HomePage> {
                       onChanged: (value) {
                         completed = value!;
                       },
-                      title: Text('Completed'),
+                      title: const Text('Completed'),
                     ),
                   ],
                 ),
                 actions: [
                   TextButton(
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   TextButton(
-                    child: Text('Add'),
+                    child: const Text('Add'),
                     onPressed: () {
                       _viewModel.addData(title, completed);
                       Navigator.pop(context);
