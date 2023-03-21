@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _viewModel = TodoListViewModel();
-  late bool completed;
+
 
   @override
   void initState() {
