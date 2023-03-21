@@ -25,17 +25,19 @@ class TodoListViewModel {
 
   Future<void> addData(String title, bool completed) async {
     final newTodo = Todo(
-      id: _todoList.length + 1,
+      id: -1,
       title: title,
       completed: completed,
     );
-    final response = await http.post(Uri.parse(baseUrl),
+    final response = await http.post(Uri.parse('$baseUrl/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(newTodo.toJson()));
 
     if (response.statusCode == 201) {
+      final jsonResponse = jsonDecode(response.body);
+      newTodo.id = jsonResponse['id'];
       _todoList.add(newTodo);
       _todoListController.add(_todoList);
     } else {
@@ -50,7 +52,7 @@ class TodoListViewModel {
       title: title,
       completed: completed,
     );
-    final response = await http.put(Uri.parse('$baseUrl${todo.id}/'),
+    final response = await http.put(Uri.parse('$baseUrl/${todo.id}/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -65,7 +67,7 @@ class TodoListViewModel {
   }
 
   Future<void> deleteData(Todo todo) async {
-    final response = await http.delete(Uri.parse('$baseUrl${todo.id}/'),
+    final response = await http.delete(Uri.parse('$baseUrl/${todo.id}/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         });
