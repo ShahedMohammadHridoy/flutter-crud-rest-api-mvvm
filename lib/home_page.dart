@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _viewModel = TodoListViewModel();
-
+  late bool completed;
 
   @override
   void initState() {
@@ -73,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                             CheckboxListTile(
                               value: completed,
                               onChanged: (value) {
-                                completed = value!;
+                                setState(() {
+                                  completed = value!;
+                                });
                               },
                               title: const Text('Completed'),
                             ),
@@ -128,7 +130,9 @@ class _HomePageState extends State<HomePage> {
                     CheckboxListTile(
                       value: completed,
                       onChanged: (value) {
-                        completed = value!;
+                        setState(() {
+                          completed = value!;
+                        });
                       },
                       title: const Text('Completed'),
                     ),
