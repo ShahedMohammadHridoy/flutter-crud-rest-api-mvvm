@@ -113,46 +113,60 @@ class _HomePageState extends State<HomePage> {
             builder: (context) {
               String title = '';
               bool completed = false;
+              bool addingTodo = false;
 
-              return AlertDialog(
-                title: const Text('Add item'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      onChanged: (value) {
-                        title = value;
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    title: const Text('Add item'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          onChanged: (value) {
+                            title = value;
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Title',
+                          ),
+                        ),
+                        CheckboxListTile(
+                          value: completed,
+                          onChanged: (value) {
+                            setState(() {
+                              completed = value!;
+                            });
+                          },
+                          title: const Text('Completed'),
+                        ),
+                        if (addingTodo) const CircularProgressIndicator(),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                    ),
-                    CheckboxListTile(
-                      value: completed,
-                      onChanged: (value) {
-                        setState(() {
-                          completed = value!;
-                        });
-                      },
-                      title: const Text('Completed'),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Add'),
-                    onPressed: () {
-                      _viewModel.addData(title, completed);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+                      TextButton(
+                        child: const Text('Add'),
+                        onPressed: addingTodo
+                            ? null
+                            : () async {
+                                setState(() {
+                                  addingTodo = true;
+                                });
+                                await _viewModel.addData(title, completed);
+                                setState(() {
+                                  addingTodo = false;
+                                });
+                                Navigator.pop(context);
+                              },
+                      ),
+                    ],
+                  );
+                },
               );
             },
           );
